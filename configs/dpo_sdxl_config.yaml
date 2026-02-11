@@ -1,0 +1,70 @@
+model:
+  pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
+  revision: null
+  variant: null
+  use_lora: true
+  lora_rank: 4
+  prediction_type: epsilon
+  use_ema: false
+
+data:
+  train_data_dir: data/dpo_data.json
+  dataset_name: null
+  dataset_config_name: null
+  image_column_preferred: image_preferred
+  image_column_rejected: image_rejected
+  caption_column: text
+  image_base_dir: data/images/
+  cache_dir: null
+  max_train_samples: null
+
+training:
+  seed: 42
+  train_batch_size: 2
+  num_train_epochs: 50
+  max_train_steps: 10000
+  gradient_accumulation_steps: 8
+  gradient_checkpointing: true
+  learning_rate: 5.0e-06
+  scale_lr: false
+  lr_scheduler: cosine
+  lr_warmup_steps: 500
+  use_8bit_adam: true
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_weight_decay: 0.01
+  adam_epsilon: 1.0e-08
+  max_grad_norm: 1.0
+  resolution: 1024
+  center_crop: false
+  random_flip: false
+  beta_dpo: 5000
+  loss_type: sigmoid
+  snr_gamma: null
+  allow_tf32: true
+
+scorer:
+  type: aesthetic
+  clip_model_name: openai/clip-vit-large-patch14
+  aesthetic_model_path: null
+  hps_model_path: null
+
+validation:
+  validation_prompts:
+    - a beautiful mountain landscape at dawn
+    - a portrait of a woman in watercolor style
+  checkpointing_steps: 500
+  checkpoints_total_limit: 5
+  validation_epochs: 5
+  num_inference_steps: 50
+
+logging:
+  output_dir: outputs/dpo_sdxl/
+  logging_dir: logs
+  report_to: wandb
+  run_name: dpo-sdxl-train
+
+device:
+  mixed_precision: bf16
+  enable_xformers: true
+  local_rank: -1

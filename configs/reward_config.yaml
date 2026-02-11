@@ -1,0 +1,57 @@
+model:
+  vit: large
+  image_size: 224
+  med_config: configs/med_config.json
+  mlp_hidden_dims:
+    - 1024
+    - 128
+    - 64
+    - 16
+  mlp_dropout: 0.2
+  embed_dim: 256
+  pretrained_path: null
+
+data:
+  data_base: data/
+  image_base: data/images/
+  pair_store_base: data/pair_store/
+  train_dataset: train
+  valid_dataset: valid
+  test_dataset: test
+  max_text_length: 35
+
+training:
+  seed: 1234
+  batch_size: 32
+  accumulation_steps: 1
+  epochs: 10
+  lr: 5.0e-06
+  lr_decay_style: cosine
+  lr_decay_ratio: 0.0
+  warmup: 0.01
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_eps: 1.0e-08
+  max_grad_norm: 1.0
+  fix_base: false
+  fix_rate: 0.0
+  rank_pair: true
+  loss_type: bradley_terry
+  loss_margin: 1.0
+
+device:
+  gpu_id: "0"
+  distributed: false
+  mixed_precision: fp16
+
+logging:
+  output_dir: outputs/image_reward/
+  log_interval: 10
+  valid_per_epoch: 1
+  save_best: true
+  report_to: wandb
+
+inference:
+  checkpoint: null
+  image_dir: null
+  prompts_path: null
